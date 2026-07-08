@@ -14,9 +14,12 @@ struct PersistenceController {
     static let preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-        for _ in 0..<10 {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
+        for i in 0..<10 {
+            let newItem = TrackerItemEntity(context: viewContext)
+            newItem.id = UUID()
+            newItem.name = "Item \(i)"
+            newItem.createdAt = Date()
+            newItem.updatedAt = Date()
         }
         do {
             try viewContext.save()
@@ -29,13 +32,28 @@ struct PersistenceController {
         return result
     }()
 
-    let container: NSPersistentContainer
+    let container: NSPersistentCloudKitContainer
 
     init(inMemory: Bool = false) {
-        container = NSPersistentContainer(name: "DataTracker")
+        container = NSPersistentCloudKitContainer(name: "DataTracker")
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
+        
+        // Enable history tracking for iCloud sync
+        guard let description = container.persistentStoreDescriptions.first else {
+            fatalError("No persistent store description found")
+        }
+        
+        // Handle iCloud Sync Toggle
+        let isCloudSyncEnabled = UserDefaults.standard.object(forKey: "isCloudSyncEnabled") as? Bool ?? true
+        if !isCloudSyncEnabled {
+            description.cloudKitContainerOptions = nil
+        }
+        
+        description.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
+        description.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
+        
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 // Replace this implementation with code to handle the error appropriately.

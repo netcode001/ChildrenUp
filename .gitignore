@@ -1,0 +1,18 @@
+# Xcode user and build state
+DerivedData/
+build/
+build_output/
+*.xcuserstate
+*.xcactivitylog
+
+# Logs and local run output
+*.log
+build_log*.txt
+test_output*.log
+app_launch*.log
+
+# macOS local metadata
+.DS_Store
+
+# Local preview artifacts
+design_preview.html
