@@ -76,7 +76,7 @@ struct DataView: View {
                 .padding(.vertical, Theme.spacing)
             }
             .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("数据概览")
+            .navigationTitle("成长数据")
             .navigationBarTitleDisplayMode(.large)
             .onAppear {
                 loadCategories()

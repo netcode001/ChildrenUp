@@ -5,27 +5,27 @@ import Combine
 struct Theme {
     // MARK: - Dynamic Colors
     static var background: Color {
-        Color.dynamic(lightHex: "F8FAFC", darkHex: "020617") // Slate-50 / Slate-950
+        Color.dynamic(lightHex: "F8F6F1", darkHex: "111712")
     }
     
     static var surface: Color {
-        Color.dynamic(lightHex: "FFFFFF", darkHex: "0F172A") // White / Slate-900
+        Color.dynamic(lightHex: "FFFDF7", darkHex: "182018")
     }
     
     static var surfaceElevated: Color {
-        Color.dynamic(lightHex: "FFFFFF", darkHex: "1E293B") // White / Slate-800
+        Color.dynamic(lightHex: "FFFFFF", darkHex: "223024")
     }
     
     static var primary: Color {
-        Color.dynamic(lightHex: "2563EB", darkHex: "3B82F6") // Blue-600 / Blue-500 (Royal Blue)
+        Color.dynamic(lightHex: "4D9F62", darkHex: "78C487")
     }
     
     static var secondary: Color {
-        Color.dynamic(lightHex: "10B981", darkHex: "34D399") // Emerald-500 / Emerald-400 (Success/Growth)
+        Color.dynamic(lightHex: "F1A86A", darkHex: "F7BE87")
     }
     
     static var accent: Color {
-        Color.dynamic(lightHex: "06B6D4", darkHex: "22D3EE") // Cyan-500 / Cyan-400 (Tech/AI)
+        Color.dynamic(lightHex: "6E9A8B", darkHex: "8BB8A8")
     }
 
     static let cornerRadius: CGFloat = 16
@@ -41,7 +41,7 @@ struct Theme {
     }
     
     static var info: Color {
-        Color.dynamic(lightHex: "3B82F6", darkHex: "60A5FA") // Blue-500 / Blue-400
+        Color.dynamic(lightHex: "5B8DEF", darkHex: "8DAEF5")
     }
     
     static var border: Color {
@@ -51,7 +51,7 @@ struct Theme {
     // MARK: - Gradients
     static var primaryGradient: LinearGradient {
         LinearGradient(
-            colors: [primary, Color.dynamic(lightHex: "60A5FA", darkHex: "93C5FD")], // Blue-600 -> Blue-400
+            colors: [primary, Color.dynamic(lightHex: "8BCB96", darkHex: "A6D8AE")],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
@@ -59,7 +59,7 @@ struct Theme {
     
     static var secondaryGradient: LinearGradient {
         LinearGradient(
-            colors: [secondary, Color.dynamic(lightHex: "34D399", darkHex: "6EE7B7")], // Emerald-500 -> Emerald-400
+            colors: [secondary, Color.dynamic(lightHex: "F7C98F", darkHex: "FBD8A8")],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
@@ -67,7 +67,7 @@ struct Theme {
     
     static var accentGradient: LinearGradient {
         LinearGradient(
-            colors: [primary, accent], // Royal Blue -> Cyan (AI/Tech feel)
+            colors: [primary, accent],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
@@ -76,8 +76,8 @@ struct Theme {
     static var surfaceGradient: LinearGradient {
         LinearGradient(
             colors: [
-                Color.dynamic(lightHex: "F9F9F9", darkHex: "252530"),
-                Color.dynamic(lightHex: "F2F2F2", darkHex: "1C1C23")
+                Color.dynamic(lightHex: "FFFDF7", darkHex: "223024"),
+                Color.dynamic(lightHex: "F3EFE6", darkHex: "182018")
             ],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
@@ -209,4 +209,3 @@ final class AppThemeManager: ObservableObject {
         }
     }
 }
-

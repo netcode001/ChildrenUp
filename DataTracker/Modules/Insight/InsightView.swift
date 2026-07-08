@@ -38,7 +38,7 @@ struct InsightView: View {
                 .tabViewStyle(.page(indexDisplayMode: .never))
             }
             .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("数据洞察")
+            .navigationTitle("成长洞察")
             .navigationBarTitleDisplayMode(.inline)
         }
     }

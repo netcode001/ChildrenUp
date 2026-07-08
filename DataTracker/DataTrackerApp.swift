@@ -49,16 +49,10 @@ struct DataTrackerApp: App {
                         Text("首页")
                     }
                 
-                DataView()
+                EntryView()
                     .tabItem {
-                        Image(systemName: "chart.bar.fill")
-                        Text("数据")
-                    }
-                
-                // Middle Tab Placeholder
-                Color.clear
-                    .tabItem {
-                        Text("")
+                        Image(systemName: "square.and.pencil")
+                        Text("记录")
                     }
                 
                 InsightView()
@@ -91,7 +85,7 @@ struct DataTrackerApp: App {
                             .foregroundColor(.white)
                     }
                 }
-                .padding(.bottom, 4) // Adjust to align with TabBar
+                .padding(.bottom, 4)
             }
             
             // AI Chat Sheet

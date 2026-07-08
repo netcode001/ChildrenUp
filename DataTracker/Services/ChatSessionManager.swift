@@ -26,7 +26,7 @@ class ChatSessionManager: ObservableObject {
     static let shared = ChatSessionManager()
     
     @Published var messages: [ChatMessage] = [
-        ChatMessage(text: "你好！想记录什么？或者问我“本周运动了多久？”", isUser: false, date: Date(), userName: "MoMo")
+        ChatMessage(text: "我是灵伴AI。试试说：小宝今天阅读30分钟，跳绳500个，数学95分。", isUser: false, date: Date(), userName: "灵伴AI")
     ]
     
     private init() {}
@@ -37,7 +37,7 @@ class ChatSessionManager: ObservableObject {
     
     func clearMessages() {
         messages = [
-            ChatMessage(text: "你好！想记录什么？或者问我“本周运动了多久？”", isUser: false, date: Date(), userName: "MoMo")
+            ChatMessage(text: "我是灵伴AI。试试说：小宝今天阅读30分钟，跳绳500个，数学95分。", isUser: false, date: Date(), userName: "灵伴AI")
         ]
     }
     

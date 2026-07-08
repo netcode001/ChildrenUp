@@ -68,7 +68,7 @@ struct AIChatView: View {
                                             audioURL: message.audioURL,
                                             duration: message.duration,
                                             userAvatarPath: message.userAvatarPath,
-                                            userName: message.userName ?? (message.isUser ? "用户" : "MoMo")
+                                            userName: message.userName ?? (message.isUser ? "家长" : "灵伴AI")
                                         )
                                         
                                         // Action Buttons for AI messages that created a record
@@ -174,7 +174,7 @@ struct AIChatView: View {
                                         .fill(isRecording ? (isCanceling ? Theme.error : Theme.accent) : Theme.surface)
                                         .frame(height: 48)
                                     
-                                    Text(isRecording ? (isCanceling ? "松手取消" : "松手发送") : "按住说话")
+                                    Text(isRecording ? (isCanceling ? "松手取消" : "松手记录") : "按住记录")
                                         .font(Theme.bodyFont)
                                         .foregroundColor(isRecording ? .white : Theme.textSecondary)
                                 }
@@ -199,7 +199,7 @@ struct AIChatView: View {
                                 )
                             } else {
                                 // Text Input
-                                TextField("写点什么...", text: $inputText)
+                                TextField("记录孩子的一件小事...", text: $inputText)
                                     .font(Theme.bodyFont)
                                     .padding(.horizontal, 16)
                                     .padding(.vertical, 12)
@@ -301,7 +301,7 @@ struct AIChatView: View {
                     .zIndex(2)
                 }
             }
-            .navigationTitle("Memo")
+            .navigationTitle("灵伴AI 记录")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
