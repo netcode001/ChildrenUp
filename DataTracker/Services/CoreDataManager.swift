@@ -634,11 +634,12 @@ class CoreDataManager {
                 // Heuristic: Map AI 'type' to category if template lookup and explicit group failed
                 if foundCategory == nil && data.newModelInfo?.group == nil, let type = data.newModelInfo?.type?.lowercased() {
                      if ["food", "drink", "meal", "diet", "beverage"].contains(where: { type.contains($0) }) { finalCategory = "饮食" }
-                     else if ["exercise", "workout", "sport", "fitness", "activity"].contains(where: { type.contains($0) }) { finalCategory = "健身" }
-                     else if ["health", "body", "medical", "sleep", "vital"].contains(where: { type.contains($0) }) { finalCategory = "健康" }
-                     else if ["money", "cost", "price", "expense", "finance"].contains(where: { type.contains($0) }) { finalCategory = "财务" }
-                     else if ["study", "learn", "exam", "read", "education"].contains(where: { type.contains($0) }) { finalCategory = "考试/学习" }
-                     else if ["work", "job", "task", "efficiency"].contains(where: { type.contains($0) }) { finalCategory = "工作/效率" }
+                     else if ["exercise", "workout", "sport", "fitness", "activity"].contains(where: { type.contains($0) }) { finalCategory = "运动" }
+                     else if ["sleep", "nap", "bedtime"].contains(where: { type.contains($0) }) { finalCategory = "睡眠" }
+                     else if ["health", "body", "medical", "vital", "medicine"].contains(where: { type.contains($0) }) { finalCategory = "健康" }
+                     else if ["score", "exam", "grade", "test"].contains(where: { type.contains($0) }) { finalCategory = "成绩" }
+                     else if ["study", "learn", "read", "homework", "education"].contains(where: { type.contains($0) }) { finalCategory = "学习" }
+                     else if ["mood", "emotion", "feeling"].contains(where: { type.contains($0) }) { finalCategory = "情绪" }
                 }
                 
                 newItem.group = finalCategory
@@ -713,110 +714,19 @@ class CategoryManager: ObservableObject {
     private let categoriesKey = "dashboard_categories"
     private let hiddenTemplatesKey = "dashboard_hidden_templates"
     
-    // Preset categories defined in tagdev.md
     private let defaultCategories = [
-        "健身",
-        "饮食",
-        "健康",
-        "财务",
         "成绩",
         "学习",
-        "工作",
-        "兴趣",
+        "睡眠",
+        "运动",
+        "健康",
+        "饮食",
+        "情绪",
         "其他"
     ]
     
     // Preset templates for each category
     let templates: [String: [TemplateItem]] = [
-        "健身": [
-            TemplateItem(name: "跑步", unit: "km", icon: "figure.run"),
-            TemplateItem(name: "步行", unit: "steps", icon: "figure.walk"),
-            TemplateItem(name: "骑行", unit: "km", icon: "bicycle"),
-            TemplateItem(name: "游泳", unit: "m", icon: "figure.pool.swim"),
-            
-            // Updated Icons based on user feedback
-            TemplateItem(name: "俯卧撑", unit: "count", icon: "figure.strengthtraining.functional"), // Changed from .traditional
-            TemplateItem(name: "引体向上", unit: "count", icon: "figure.climbing"), // Changed from .functional (closest visual match)
-            TemplateItem(name: "深蹲", unit: "count", icon: "figure.strengthtraining.traditional"), // Changed from .cooldown (Squat is traditional strength)
-            TemplateItem(name: "仰卧起坐", unit: "count", icon: "figure.core.training"),
-            TemplateItem(name: "平板支撑", unit: "sec", icon: "stopwatch"), // Maybe figure.core.training.fill? Keep stopwatch for now
-            TemplateItem(name: "跳绳", unit: "count", icon: "figure.jumprope"),
-            
-            // New Gym Equipment
-            TemplateItem(name: "跑步机", unit: "km", icon: "figure.run"), // Generic run
-            TemplateItem(name: "划船机", unit: "km", icon: "figure.rower"),
-            TemplateItem(name: "椭圆机", unit: "min", icon: "figure.elliptical"),
-            TemplateItem(name: "动感单车", unit: "min", icon: "figure.indoor.cycle"),
-            TemplateItem(name: "登山机", unit: "min", icon: "figure.stairs"),
-            TemplateItem(name: "卧推", unit: "kg", icon: "dumbbell.fill"), // Generic weight
-            TemplateItem(name: "倒蹬机", unit: "kg", icon: "figure.strengthtraining.traditional"), // Leg press is traditional
-            
-            TemplateItem(name: "力量训练", unit: "kg", icon: "dumbbell.fill"),
-            TemplateItem(name: "瑜伽", unit: "min", icon: "figure.yoga"),
-            TemplateItem(name: "运动消耗", unit: "kcal", icon: "flame.fill"),
-            TemplateItem(name: "平均心率", unit: "bpm", icon: "heart.fill")
-        ],
-        "饮食": [
-            TemplateItem(name: "饮水量", unit: "ml", icon: "drop.fill"),
-            TemplateItem(name: "热量摄入", unit: "kcal", icon: "fork.knife"),
-            TemplateItem(name: "蛋白质", unit: "g", icon: "fish.fill"),
-            TemplateItem(name: "碳水化合物", unit: "g", icon: "circle.grid.cross.fill"),
-            TemplateItem(name: "脂肪", unit: "g", icon: "drop.triangle.fill"),
-            
-            // Changed from Caffeine
-            TemplateItem(name: "咖啡", unit: "杯", icon: "cup.and.saucer.fill"),
-            
-            TemplateItem(name: "糖分", unit: "g", icon: "cube.fill"),
-            TemplateItem(name: "水果蔬菜", unit: "portions", icon: "carrot.fill"),
-            
-            // New Food & Drinks
-            TemplateItem(name: "奶茶", unit: "杯", icon: "cup.and.saucer"),
-            TemplateItem(name: "火锅", unit: "次", icon: "flame"), // flame implies hot/cooking
-            TemplateItem(name: "料理", unit: "顿", icon: "fork.knife.circle.fill"),
-            TemplateItem(name: "牛排", unit: "份", icon: "fork.knife"),
-            TemplateItem(name: "披萨", unit: "块", icon: "circle.grid.cross"), // Looks like a sliced pie
-            
-            // Alcohol
-            TemplateItem(name: "白酒", unit: "ml", icon: "wineglass"),
-            TemplateItem(name: "红酒", unit: "杯", icon: "wineglass.fill"),
-            TemplateItem(name: "葡萄酒", unit: "杯", icon: "wineglass.fill"),
-            TemplateItem(name: "黄酒", unit: "ml", icon: "drop.fill"), // Liquid drop
-            TemplateItem(name: "酒精摄入", unit: "ml", icon: "wineglass.fill"), // Keep original generic one too
-            
-            TemplateItem(name: "零食/含糖饮料", unit: "count", icon: "takeoutbag.and.cup.and.straw.fill")
-        ],
-        "健康": [
-            TemplateItem(name: "体重", unit: "kg", icon: "scalemass.fill"),
-            TemplateItem(name: "体脂率", unit: "%", icon: "percent"),
-            TemplateItem(name: "睡眠时长", unit: "hr", icon: "bed.double.fill"),
-            TemplateItem(name: "深睡时长", unit: "hr", icon: "moon.zzz.fill"),
-            TemplateItem(name: "静息心率", unit: "bpm", icon: "waveform.path.ecg"),
-            TemplateItem(name: "收缩压", unit: "mmHg", icon: "heart.circle.fill"),
-            TemplateItem(name: "舒张压", unit: "mmHg", icon: "heart.circle"),
-            TemplateItem(name: "体温", unit: "°C", icon: "thermometer"),
-            
-            // Medical Indicators
-            TemplateItem(name: "血糖", unit: "mmol/L", icon: "drop.fill"),
-            TemplateItem(name: "血氧", unit: "%", icon: "bubbles.and.sparkles.fill"), // Changed from o2.circle to bubbles
-            TemplateItem(name: "胆固醇", unit: "mmol/L", icon: "drop.triangle.fill"),
-            TemplateItem(name: "甘油三酯", unit: "mmol/L", icon: "drop.circle.fill"),
-            TemplateItem(name: "尿酸", unit: "μmol/L", icon: "testtube.2"),
-            TemplateItem(name: "视力", unit: "score", icon: "eye.fill"),
-            
-            TemplateItem(name: "心情指数", unit: "score", icon: "face.smiling"),
-            TemplateItem(name: "精力值", unit: "score", icon: "bolt.fill"),
-            TemplateItem(name: "冥想/正念", unit: "min", icon: "brain.head.profile")
-        ],
-        "财务": [
-            TemplateItem(name: "今日总支出", unit: "元", icon: "yensign.circle.fill"),
-            TemplateItem(name: "餐饮支出", unit: "元", icon: "fork.knife.circle"),
-            TemplateItem(name: "交通支出", unit: "元", icon: "car.circle"),
-            TemplateItem(name: "购物支出", unit: "元", icon: "bag.circle"),
-            TemplateItem(name: "娱乐支出", unit: "元", icon: "gamecontroller.circle"),
-            TemplateItem(name: "今日收入", unit: "元", icon: "arrow.down.circle.fill"),
-            TemplateItem(name: "储蓄/理财", unit: "元", icon: "banknote.fill"),
-            TemplateItem(name: "固定账单", unit: "元", icon: "doc.text.fill")
-        ],
         "成绩": [
             TemplateItem(name: "语文", unit: "分", icon: "book.fill"),
             TemplateItem(name: "数学", unit: "分", icon: "function"),
@@ -834,7 +744,9 @@ class CategoryManager: ObservableObject {
             TemplateItem(name: "信息技术", unit: "分", icon: "desktopcomputer")
         ],
         "学习": [
-            TemplateItem(name: "学习时长", unit: "hr", icon: "book.fill"),
+            TemplateItem(name: "阅读", unit: "分钟", icon: "book.closed.fill"),
+            TemplateItem(name: "作业", unit: "项", icon: "pencil.and.list.clipboard"),
+            TemplateItem(name: "学习时长", unit: "小时", icon: "book.fill"),
             TemplateItem(name: "专注时长", unit: "min", icon: "timer"),
             TemplateItem(name: "刷题数量", unit: "count", icon: "pencil.and.outline"),
             TemplateItem(name: "背单词", unit: "count", icon: "textformat.abc"),
@@ -843,23 +755,51 @@ class CategoryManager: ObservableObject {
             TemplateItem(name: "错题整理", unit: "count", icon: "xmark.circle"),
             TemplateItem(name: "网课/听课", unit: "min", icon: "desktopcomputer")
         ],
-        "工作": [
-            TemplateItem(name: "工作时长", unit: "hr", icon: "briefcase.fill"),
-            TemplateItem(name: "加班时长", unit: "hr", icon: "clock.badge.exclamationmark"),
-            TemplateItem(name: "完成任务数", unit: "count", icon: "checkmark.square.fill"),
-            TemplateItem(name: "会议时长", unit: "min", icon: "person.3.fill"),
-            TemplateItem(name: "通勤时长", unit: "min", icon: "tram.fill"),
-            TemplateItem(name: "邮件/消息处理", unit: "count", icon: "envelope.fill"),
-            TemplateItem(name: "代码行数/提交", unit: "count", icon: "chevron.left.forwardslash.chevron.right")
+        "睡眠": [
+            TemplateItem(name: "睡眠时长", unit: "小时", icon: "bed.double.fill"),
+            TemplateItem(name: "入睡时间", unit: "点", icon: "moon.zzz.fill"),
+            TemplateItem(name: "午睡", unit: "分钟", icon: "powersleep"),
+            TemplateItem(name: "夜醒", unit: "次", icon: "alarm.fill")
         ],
-        "兴趣": [
-            TemplateItem(name: "屏幕使用时间", unit: "hr", icon: "iphone"),
-            TemplateItem(name: "游戏时长", unit: "min", icon: "gamecontroller.fill"),
-            TemplateItem(name: "练琴/乐器", unit: "min", icon: "music.note"),
-            TemplateItem(name: "绘画/创作", unit: "min", icon: "paintbrush.fill"),
-            TemplateItem(name: "观影/追剧", unit: "min", icon: "tv.fill"),
-            TemplateItem(name: "社交/聚会", unit: "hr", icon: "person.2.fill"),
-            TemplateItem(name: "家务劳动", unit: "min", icon: "house.fill")
+        "运动": [
+            TemplateItem(name: "跳绳", unit: "个", icon: "figure.jumprope"),
+            TemplateItem(name: "跑步", unit: "分钟", icon: "figure.run"),
+            TemplateItem(name: "步行", unit: "步", icon: "figure.walk"),
+            TemplateItem(name: "游泳", unit: "分钟", icon: "figure.pool.swim"),
+            TemplateItem(name: "篮球", unit: "分钟", icon: "basketball.fill"),
+            TemplateItem(name: "足球", unit: "分钟", icon: "soccerball"),
+            TemplateItem(name: "户外活动", unit: "分钟", icon: "sun.max.fill")
+        ],
+        "健康": [
+            TemplateItem(name: "体温", unit: "°C", icon: "thermometer"),
+            TemplateItem(name: "用药", unit: "次", icon: "pills.fill"),
+            TemplateItem(name: "身高", unit: "cm", icon: "ruler.fill"),
+            TemplateItem(name: "体重", unit: "kg", icon: "scalemass.fill"),
+            TemplateItem(name: "视力", unit: "分", icon: "eye.fill"),
+            TemplateItem(name: "过敏", unit: "次", icon: "allergens"),
+            TemplateItem(name: "咳嗽", unit: "次", icon: "lungs.fill")
+        ],
+        "饮食": [
+            TemplateItem(name: "早餐", unit: "份", icon: "sunrise.fill"),
+            TemplateItem(name: "午餐", unit: "份", icon: "fork.knife"),
+            TemplateItem(name: "晚餐", unit: "份", icon: "moon.stars.fill"),
+            TemplateItem(name: "饮水", unit: "杯", icon: "drop.fill"),
+            TemplateItem(name: "水果", unit: "份", icon: "carrot.fill"),
+            TemplateItem(name: "牛奶", unit: "杯", icon: "mug.fill"),
+            TemplateItem(name: "零食", unit: "次", icon: "takeoutbag.and.cup.and.straw.fill")
+        ],
+        "情绪": [
+            TemplateItem(name: "开心", unit: "次", icon: "face.smiling.fill"),
+            TemplateItem(name: "生气", unit: "次", icon: "flame.fill"),
+            TemplateItem(name: "难过", unit: "次", icon: "cloud.rain.fill"),
+            TemplateItem(name: "焦虑", unit: "次", icon: "exclamationmark.bubble.fill"),
+            TemplateItem(name: "主动表达", unit: "次", icon: "bubble.left.and.bubble.right.fill")
+        ],
+        "其他": [
+            TemplateItem(name: "身高体重记录", unit: "次", icon: "list.clipboard.fill"),
+            TemplateItem(name: "老师反馈", unit: "次", icon: "person.text.rectangle.fill"),
+            TemplateItem(name: "亲子活动", unit: "次", icon: "figure.2.and.child.holdinghands"),
+            TemplateItem(name: "兴趣课", unit: "分钟", icon: "paintpalette.fill")
         ]
     ]
     
@@ -869,41 +809,38 @@ class CategoryManager: ObservableObject {
     
     func loadCategories() {
         if let saved = defaults.array(forKey: categoriesKey) as? [String] {
-            self.categories = saved
-            
-            // Migration: Rename categories
             var needsSave = false
             let renames = [
+                "健身": "运动",
                 "考试/学习": "学习",
-                "工作/效率": "工作",
-                "效率": "工作",
-                "兴趣/其他": "兴趣",
+                "工作/效率": "其他",
+                "效率": "其他",
+                "工作": "其他",
+                "财务": "其他",
+                "兴趣": "其他",
+                "兴趣/其他": "其他",
                 "未分类": "其他"
             ]
             
-            for (oldName, newName) in renames {
-                if let index = self.categories.firstIndex(of: oldName) {
-                    self.categories[index] = newName
+            var normalized: [String] = []
+            for category in saved {
+                let newName = renames[category] ?? category
+                if defaultCategories.contains(newName), !normalized.contains(newName) {
+                    normalized.append(newName)
+                }
+                if newName != category {
                     needsSave = true
                 }
             }
             
-            // Ensure "成绩" exists for existing users
-            if !self.categories.contains("成绩") {
-                // Insert after "财务" if possible, or append
-                if let financeIndex = self.categories.firstIndex(of: "财务") {
-                    self.categories.insert("成绩", at: financeIndex + 1)
-                } else {
-                    self.categories.append("成绩")
-                }
-                needsSave = true
+            for category in defaultCategories where !normalized.contains(category) {
+                normalized.append(category)
             }
             
-            // Ensure "其他" exists for existing users
-            if !self.categories.contains("其他") {
-                self.categories.append("其他")
+            if normalized != saved {
                 needsSave = true
             }
+            self.categories = normalized
             
             if needsSave {
                 saveCategories()
